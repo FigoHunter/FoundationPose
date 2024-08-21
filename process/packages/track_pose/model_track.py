@@ -31,7 +31,7 @@ def init_module():
   return handle
 
 
-def process(handle, mesh_file, scene_dir, est_refine_iter=5, track_refine_iter=2, debug=0, debug_dir=None):
+def process(handle, mesh_file, scene_dir, tracked_obj, est_refine_iter=5, track_refine_iter=2, debug=0, debug_dir=None):
   mesh = trimesh.load(mesh_file)
   if debug_dir is None:
     now = datetime.now()
@@ -54,7 +54,7 @@ def process(handle, mesh_file, scene_dir, est_refine_iter=5, track_refine_iter=2
     color = reader.get_color(i)
     depth = reader.get_depth(i)
     if i==0:
-      mask = reader.get_mask(0).astype(bool)
+      mask = reader.get_mask(0,tracked_obj).astype(bool)
       pose = est.register(K=reader.K, rgb=color, depth=depth, ob_mask=mask, iteration=est_refine_iter)
 
       if debug>=3:
